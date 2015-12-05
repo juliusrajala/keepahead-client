@@ -1,8 +1,10 @@
 package com.example.kakatin.kakatinhelmet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -15,9 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kakatin.kakatinhelmet.services.ApiConnectorService;
+
 
 public class SensorFragment extends Fragment {
     private static final String TAG = SensorFragment.class.getSimpleName();
+    private static final int SYNC_DELAY = 5000;
 
     private TextView speedStat;
     private TextView tempStat;
@@ -34,6 +39,7 @@ public class SensorFragment extends Fragment {
     private ImageView mapText;
     private View slider;
     private View goneSlider;
+    private Handler handler;
 
     public static SensorFragment newInstance() {
         SensorFragment fragment = new SensorFragment();
@@ -45,6 +51,7 @@ public class SensorFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        handler = new Handler();
     }
 
     @Override
@@ -100,9 +107,26 @@ public class SensorFragment extends Fragment {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                callUpdate("http://damp-spire-9142.herokuapp.com/temperature");
+                handler.postDelayed(this, SYNC_DELAY);
+            }
+        }, SYNC_DELAY);
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
+    }
+
+    public void callUpdate(String dataURI){
+        Intent intent = new Intent(getActivity(), ApiConnectorService.class);
+        intent.setData(Uri.parse(dataURI));
     }
 
     private void fragmentTransaction(){

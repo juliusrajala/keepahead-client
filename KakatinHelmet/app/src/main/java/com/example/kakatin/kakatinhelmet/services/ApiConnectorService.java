@@ -24,10 +24,6 @@ public class ApiConnectorService extends IntentService {
 
     private final OkHttpClient client = new OkHttpClient();
 
-    private static final int GET1 = 1;
-    private static final int GET2 = 2;
-    private static final int GET3 = 3;
-
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
@@ -43,49 +39,17 @@ public class ApiConnectorService extends IntentService {
         if(dataString == null){
             return;
         }
-        if(dataString.charAt(0)=='P'){
-            //TODO: POST HTTP request
-            try {
-                notifyServer();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else{
-            //GET request
-            //int CASE = (int)dataString.charAt(1);
-            int CASE = 3;
-            try {
-                getJSON(CASE);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            getJSON(dataString);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public void getJSON(int CASE) throws Exception {
-        Request request;
-        switch (CASE){
-            case GET1:
-                request = new Request.Builder()
-                        .url("http://damp-spire-9142.herokuapp.com/android/deliverAllData")
+    public void getJSON(String URI) throws Exception {
+        Request request = new Request.Builder()
+                        .url(URI)
                         .build();
-                break;
-            case GET2:
-                request = new Request.Builder()
-                        .url("http://damp-spire-9142.herokuapp.com/android/deliverLocation")
-                        .build();
-                break;
-            case GET3:
-                request = new Request.Builder()
-                        .url("http://damp-spire-9142.herokuapp.com/temperature")
-                        .build();
-                break;
-            default:
-                request = new Request.Builder()
-                        .url("http://damp-spire-9142.herokuapp.com/hello")
-                        .build();
-                break;
-        }
 
         client.newCall(request).enqueue(new Callback() {
             @Override
