@@ -5,7 +5,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    android:elevation="2dp"
+    android:elevation="8dp"
     >
     <LinearLayout
         android:paddingTop="20dp"
@@ -14,10 +14,14 @@
         android:orientation="horizontal"
         android:background="@color/ColorPrimaryDark">
 
-        <LinearLayout
-            android:id="@+id/stats_button"
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/stats_button"
+            android:layout_width="match_parent"
             android:clickable="true"
             android:layout_height="match_parent"
             android:foreground="?attr/selectableItemBackground"
@@ -32,11 +36,21 @@
                 android:layout_height="match_parent"
                 android:text="STATS"/>
         </LinearLayout>
+            <View
+                android:id="@+id/toolbar_slider_stat"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="7dp"
+                android:background="@color/tabsScrollColor"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
         <LinearLayout
             android:id="@+id/map_button"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:clickable="true"
-            android:layout_weight="1"
             android:foreground="?attr/selectableItemBackground"
             android:layout_height="match_parent"
             android:background="@color/ColorPrimaryDark">
@@ -53,8 +67,16 @@
                 android:textSize="20sp"
                 android:gravity="center"
                 android:layout_height="match_parent" />
-        </LinearLayout>
-    </LinearLayout>
 
+
+        </LinearLayout>
+            <View
+                android:id="@+id/toolbar_slider"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="7dp"
+                android:background="@color/tabsScrollColor"/>
+        </RelativeLayout>
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

@@ -8,6 +8,8 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +31,8 @@ public class SensorFragment extends Fragment {
     private LinearLayout mapButton;
     private TextView statsText;
     private TextView mapText;
+    private View slider;
+    private View goneSlider;
 
     public static SensorFragment newInstance() {
         SensorFragment fragment = new SensorFragment();
@@ -56,17 +60,31 @@ public class SensorFragment extends Fragment {
         statsText = (TextView)toolBar.findViewById(R.id.stats_text);
         mapText = (TextView)toolBar.findViewById(R.id.map_text_button);
         statsText.setTextColor(getResources().getColor(R.color.TextPrimaryDark));
+        slider = toolBar.findViewById(R.id.toolbar_slider_stat);
+        goneSlider = toolBar.findViewById(R.id.toolbar_slider);
+        slider.setVisibility(View.VISIBLE);
+        goneSlider.setVisibility(View.GONE);
+
         statsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Stats clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "You're here dummy.", Toast.LENGTH_SHORT).show();
             }
         });
         mapButton = (LinearLayout)toolBar.findViewById(R.id.map_button);
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"Map clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Map clicked", Toast.LENGTH_SHORT).show();
+//                slider.animate().translationX(50);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slider_move_left);
+                        slider.startAnimation(animation);
+                    }
+                });
+
             }
         });
 
