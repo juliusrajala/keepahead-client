@@ -13,6 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -23,7 +26,8 @@ import com.google.android.gms.maps.model.LatLng;
 /**
  * Created by Matti on 04/12/2015.
  */
-public class OurMapFragment extends Fragment{
+public class OurMapFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener{
     public static final String TAG = OurMapFragment.class.getSimpleName();
 
     private CardView toolBar;
@@ -36,6 +40,7 @@ public class OurMapFragment extends Fragment{
 
     private MapView mapView;
     private GoogleMap googleMap;
+    GoogleApiClient mGoogleApiClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -101,11 +106,13 @@ public class OurMapFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        buildGoogleApiClient();
     }
 
     @Override
     public void onPause(){
         super.onPause();
+        mapView.onPause();
     }
 
     private void fragmentTransaction(){
@@ -116,6 +123,7 @@ public class OurMapFragment extends Fragment{
     @Override
     public void onResume(){
         super.onResume();
+        mapView.onPause();
     }
     public static OurMapFragment newInstance() {
         OurMapFragment fragment = new OurMapFragment();
@@ -123,5 +131,34 @@ public class OurMapFragment extends Fragment{
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    protected synchronized void buildGoogleApiClient(){
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(60.459031, 22.267305)).zoom(15).build();
+        googleMap.animateCamera(CameraUpdateFactory
+                .newCameraPosition(cameraPosition));
+
+        mapView.invalidate();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 }
