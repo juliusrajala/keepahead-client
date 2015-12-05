@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,8 +30,8 @@ public class SensorFragment extends Fragment {
     private CardView toolBar;
     private LinearLayout statsButton;
     private LinearLayout mapButton;
-    private TextView statsText;
-    private TextView mapText;
+    private ImageView statsText;
+    private ImageView mapText;
     private View slider;
     private View goneSlider;
 
@@ -57,10 +58,15 @@ public class SensorFragment extends Fragment {
 
         toolBar = (CardView)getActivity().findViewById(R.id.toolBar);
         statsButton = (LinearLayout)toolBar.findViewById(R.id.stats_button);
-        statsText = (TextView)toolBar.findViewById(R.id.stats_text);
-        mapText = (TextView)toolBar.findViewById(R.id.map_text_button);
-        mapText.setTextColor(getResources().getColor(R.color.TextWhite));
-        statsText.setTextColor(getResources().getColor(R.color.TextPrimaryDark));
+        statsText = (ImageView)toolBar.findViewById(R.id.stats_text);
+        mapText = (ImageView)toolBar.findViewById(R.id.map_text_button);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mapText.setImageResource(R.mipmap.map_valk);
+                statsText.setImageResource(R.mipmap.stats_pun);
+            }
+        });
         slider = toolBar.findViewById(R.id.toolbar_slider_stat);
         goneSlider = toolBar.findViewById(R.id.toolbar_slider);
         slider.setVisibility(View.VISIBLE);

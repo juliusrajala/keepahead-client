@@ -27,14 +27,14 @@
             android:foreground="?attr/selectableItemBackground"
             android:background="@color/ColorPrimaryDark"
             >
-            <TextView
+            <ImageView
+                android:src="@mipmap/stats_valk"
                 android:layout_width="match_parent"
+                android:padding="7dp"
                 android:id="@+id/stats_text"
                 android:gravity="center"
-                android:textColor="#ffffff"
-                android:textSize="20sp"
                 android:layout_height="match_parent"
-                android:text="STATS"/>
+                />
         </LinearLayout>
             <View
                 android:id="@+id/toolbar_slider_stat"
@@ -59,12 +59,12 @@
                 android:layout_width="0.1dp"
                 android:layout_height="match_parent"
                 android:background="#ffffff"/>-->
-            <TextView
+            <ImageView
+                android:src="@mipmap/map_valk"
                 android:layout_width="match_parent"
-                android:text="MAP"
                 android:textColor="#ffffff"
+                android:padding="7dp"
                 android:id="@+id/map_text_button"
-                android:textSize="20sp"
                 android:gravity="center"
                 android:layout_height="match_parent" />
 

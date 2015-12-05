@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,8 +34,8 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
     private CardView toolBar;
     private LinearLayout statsButton;
     private LinearLayout mapButton;
-    private TextView statsText;
-    private TextView mapText;
+    private ImageView statsText;
+    private ImageView mapText;
     private View slider;
     private View goneSlider;
 
@@ -48,10 +49,15 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
 
         toolBar = (CardView)getActivity().findViewById(R.id.toolBar);
         statsButton = (LinearLayout)toolBar.findViewById(R.id.stats_button);
-        statsText = (TextView)toolBar.findViewById(R.id.stats_text);
-        mapText = (TextView)toolBar.findViewById(R.id.map_text_button);
-        mapText.setTextColor(getResources().getColor(R.color.TextPrimaryDark));
-        statsText.setTextColor(getResources().getColor(R.color.TextWhite));
+        statsText = (ImageView)toolBar.findViewById(R.id.stats_text);
+        mapText = (ImageView)toolBar.findViewById(R.id.map_text_button);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                statsText.setImageResource(R.mipmap.stats_valk);
+                mapText.setImageResource(R.mipmap.map_pun);
+            }
+        });
         slider = toolBar.findViewById(R.id.toolbar_slider);
         goneSlider = toolBar.findViewById(R.id.toolbar_slider_stat);
         slider.setVisibility(View.VISIBLE);
@@ -89,12 +95,12 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
             Log.e(TAG, "Error thrown", e);
         }
         googleMap = mapView.getMap();
-        googleMap.setMyLocationEnabled(true);
+//        googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setMapToolbarEnabled(false);
         googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-
+        Log.e(TAG, "GoogleMap should be initialized.");
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(60.449977, 22.293327), 12.0f));
+                new LatLng(60.449977, 22.293327), 15.0f));
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng(60.449977, 22.293327))
                 .zoom(15)
@@ -123,7 +129,7 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
     @Override
     public void onResume(){
         super.onResume();
-        mapView.onPause();
+        mapView.onResume();
     }
     public static OurMapFragment newInstance() {
         OurMapFragment fragment = new OurMapFragment();
@@ -145,7 +151,7 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
     public void onConnected(Bundle bundle) {
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(60.459031, 22.267305)).zoom(15).build();
+                .target(new LatLng(60.459031, 22.267305)).zoom(18).build();
         googleMap.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition));
 
