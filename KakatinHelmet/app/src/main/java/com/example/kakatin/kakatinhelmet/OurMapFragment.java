@@ -3,6 +3,7 @@ package com.example.kakatin.kakatinhelmet;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by Matti on 04/12/2015.
@@ -25,6 +33,9 @@ public class OurMapFragment extends Fragment{
     private TextView mapText;
     private View slider;
     private View goneSlider;
+
+    private MapView mapView;
+    private GoogleMap googleMap;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -63,6 +74,27 @@ public class OurMapFragment extends Fragment{
 
             }
         });
+
+        mapView = (MapView)v.findViewById(R.id.map_view);
+        mapView.onCreate(savedInstanceState);
+
+        try{
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e){
+            Log.e(TAG, "Error thrown", e);
+        }
+        googleMap = mapView.getMap();
+        googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+        googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(60.449977, 22.293327), 12.0f));
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(60.449977, 22.293327))
+                .zoom(15)
+                .build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         return v;
     }
 
