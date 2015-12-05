@@ -84,6 +84,7 @@ public class SensorFragment extends Fragment {
                         slider.startAnimation(animation);
                     }
                 });
+                fragmentTransaction();
 
             }
         });
@@ -95,6 +96,11 @@ public class SensorFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
+    }
+
+    private void fragmentTransaction(){
+        OurMapFragment fragment = OurMapFragment.newInstance();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,fragment,"MAP_FRAGMENT").commit();
     }
 
     @Override

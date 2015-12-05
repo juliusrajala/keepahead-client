@@ -47,10 +47,11 @@ public class OurMapFragment extends Fragment{
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slider_move_left);
+                        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slider_move_right);
                         slider.startAnimation(animation);
                     }
                 });
+                fragmentTransaction();
             }
         });
         mapButton = (LinearLayout)toolBar.findViewById(R.id.map_button);
@@ -72,6 +73,11 @@ public class OurMapFragment extends Fragment{
     @Override
     public void onPause(){
         super.onPause();
+    }
+
+    private void fragmentTransaction(){
+        SensorFragment fragment = SensorFragment.newInstance();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,fragment,"MAP_FRAGMENT").commit();
     }
 
     @Override
