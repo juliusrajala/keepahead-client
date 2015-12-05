@@ -34,7 +34,8 @@ public class OurMapFragment extends Fragment{
         statsButton = (LinearLayout)toolBar.findViewById(R.id.stats_button);
         statsText = (TextView)toolBar.findViewById(R.id.stats_text);
         mapText = (TextView)toolBar.findViewById(R.id.map_text_button);
-        statsText.setTextColor(getResources().getColor(R.color.TextPrimaryDark));
+        mapText.setTextColor(getResources().getColor(R.color.TextPrimaryDark));
+        statsText.setTextColor(getResources().getColor(R.color.TextWhite));
         slider = toolBar.findViewById(R.id.toolbar_slider);
         goneSlider = toolBar.findViewById(R.id.toolbar_slider_stat);
         slider.setVisibility(View.VISIBLE);

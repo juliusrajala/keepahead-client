@@ -59,6 +59,7 @@ public class SensorFragment extends Fragment {
         statsButton = (LinearLayout)toolBar.findViewById(R.id.stats_button);
         statsText = (TextView)toolBar.findViewById(R.id.stats_text);
         mapText = (TextView)toolBar.findViewById(R.id.map_text_button);
+        mapText.setTextColor(getResources().getColor(R.color.TextWhite));
         statsText.setTextColor(getResources().getColor(R.color.TextPrimaryDark));
         slider = toolBar.findViewById(R.id.toolbar_slider_stat);
         goneSlider = toolBar.findViewById(R.id.toolbar_slider);
