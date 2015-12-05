@@ -25,6 +25,7 @@
             >
             <TextView
                 android:layout_width="match_parent"
+                android:id="@+id/stats_text"
                 android:gravity="center"
                 android:textColor="#ffffff"
                 android:textSize="20sp"
@@ -48,6 +49,7 @@
                 android:layout_width="match_parent"
                 android:text="MAP"
                 android:textColor="#ffffff"
+                android:id="@+id/map_text_button"
                 android:textSize="20sp"
                 android:gravity="center"
                 android:layout_height="match_parent" />

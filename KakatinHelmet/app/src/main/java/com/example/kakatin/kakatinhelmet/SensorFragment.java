@@ -27,6 +27,8 @@ public class SensorFragment extends Fragment {
     private CardView toolBar;
     private LinearLayout statsButton;
     private LinearLayout mapButton;
+    private TextView statsText;
+    private TextView mapText;
 
     public static SensorFragment newInstance() {
         SensorFragment fragment = new SensorFragment();
@@ -51,14 +53,16 @@ public class SensorFragment extends Fragment {
 
         toolBar = (CardView)getActivity().findViewById(R.id.toolBar);
         statsButton = (LinearLayout)toolBar.findViewById(R.id.stats_button);
-        statsButton.setBackgroundColor(getResources().getColor(R.color.ColorPrimary));
+        statsText = (TextView)toolBar.findViewById(R.id.stats_text);
+        mapText = (TextView)toolBar.findViewById(R.id.map_text_button);
+        statsText.setTextColor(getResources().getColor(R.color.TextPrimaryDark));
         statsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Stats clicked", Toast.LENGTH_SHORT).show();
             }
         });
-        mapButton = (LinearLayout)toolBar.findViewById(R.id.stats_button);
+        mapButton = (LinearLayout)toolBar.findViewById(R.id.map_button);
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
