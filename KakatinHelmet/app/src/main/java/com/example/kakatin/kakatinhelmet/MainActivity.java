@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -31,11 +32,10 @@ public class MainActivity extends AppCompatActivity {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(getResources().getColor(R.color.ColorPrimaryDark));
         }
+
         setContentView(R.layout.activity_main);
         FragmentManager manager = getSupportFragmentManager();
         android.support.v4.app.Fragment fragment = manager.findFragmentById(R.id.fragmentContainer);
-
-        statsButton = (LinearLayout)
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         if(fragment == null){
