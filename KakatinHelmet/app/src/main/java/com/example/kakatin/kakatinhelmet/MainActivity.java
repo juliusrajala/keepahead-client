@@ -18,8 +18,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int SENSOR_FRAGMENT = 1;
     private static final int MAP_FRAGMENT = 2;
 
-    private LinearLayout statsButton;
-    private LinearLayout mapButton;
 
     private int currentFragment = 1;
 

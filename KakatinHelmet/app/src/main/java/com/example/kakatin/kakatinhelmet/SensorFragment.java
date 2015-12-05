@@ -4,10 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class SensorFragment extends Fragment {
@@ -20,6 +23,10 @@ public class SensorFragment extends Fragment {
     private int mTemp;
     private int mSpeed;
     private String mLocale;
+
+    private CardView toolBar;
+    private LinearLayout statsButton;
+    private LinearLayout mapButton;
 
     public static SensorFragment newInstance() {
         SensorFragment fragment = new SensorFragment();
@@ -41,6 +48,23 @@ public class SensorFragment extends Fragment {
         speedStat = (TextView)v.findViewById(R.id.speed_stat);
         tempStat = (TextView)v.findViewById(R.id.temp_stat);
         localeStat = (TextView)v.findViewById(R.id.locale_stat);
+
+        toolBar = (CardView)getActivity().findViewById(R.id.toolBar);
+        statsButton = (LinearLayout)toolBar.findViewById(R.id.stats_button);
+        statsButton.setBackgroundColor(getResources().getColor(R.color.ColorPrimary));
+        statsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Stats clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mapButton = (LinearLayout)toolBar.findViewById(R.id.stats_button);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),"Map clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return v;
     }

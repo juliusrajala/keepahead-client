@@ -18,7 +18,9 @@
             android:id="@+id/stats_button"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:clickable="true"
             android:layout_height="match_parent"
+            android:foreground="?attr/selectableItemBackground"
             android:background="@color/ColorPrimaryDark"
             >
             <TextView
@@ -32,7 +34,9 @@
         <LinearLayout
             android:id="@+id/map_button"
             android:layout_width="0dp"
+            android:clickable="true"
             android:layout_weight="1"
+            android:foreground="?attr/selectableItemBackground"
             android:layout_height="match_parent"
             android:background="@color/ColorPrimaryDark">
 
