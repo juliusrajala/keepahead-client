@@ -2,26 +2,105 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background_repeat">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#e74c3c"
+        android:textSize="45sp"
+        android:layout_margin="24dp"
+        android:text="Käkätin Stäts" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:gravity="center">
+        <TextView
+            android:layout_width="match_parent"
+            android:textSize="25sp"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Where am I?"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:textSize="30sp"
+            android:textColor="#ffffff"
+            android:id="@+id/locale_stat"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Turku" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:gravity="center">
+        <TextView
+            android:layout_width="match_parent"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:text="Top speed:" />
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:textSize="30sp"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:id="@+id/speed_stat"
+        android:text="15km/h" />
+        </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_margin="16dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Temperature: 25 degrees celsius" />
+        android:textSize="25sp"
+        android:textColor="#ffffff"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Temperature:" />
+        <TextView
+            android:layout_width="match_parent"
+            android:textColor="#ffffff"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="30sp"
+            android:id="@+id/temp_stat"
+            android:text="25C"/>
+    </LinearLayout>
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/last_crash"
-        android:text="Last Crash" />
+        android:layout_margin="16dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:textSize="35sp"
+            android:textColor="#e74c3c"
+            android:layout_height="wrap_content"
+            android:text="Last crash:" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:textSize="45sp"
+            android:textColor="#e74c3c"
+            android:layout_height="wrap_content"
+            android:id="@+id/last_crash_time"
+            android:text="43 seconds" />
+
+    </LinearLayout>
+
 </LinearLayout>
