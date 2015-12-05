@@ -19,12 +19,13 @@
         android:layout_margin="16dp"
         android:orientation="vertical"
         android:gravity="center">
-        <com.example.kakatin.kakatinhelmet.MyCustomTextView
+        <com.example.kakatin.kakatinhelmet.models.BreadView
             android:layout_width="match_parent"
             android:textSize="25sp"
             android:textColor="#ffffff"
             android:gravity="center"
             android:layout_height="wrap_content"
+            android:background="#000000"
             android:text="Where am I?"/>
         <TextView
             android:layout_width="match_parent"
