@@ -144,7 +144,7 @@ public class SensorFragment extends Fragment {
 
     private void updateViews(String type, String data){
         Log.e(TAG, "data: "+data);
-        final String moldedData = data.substring(13,16);
+        final String moldedData = data.substring(13,17);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

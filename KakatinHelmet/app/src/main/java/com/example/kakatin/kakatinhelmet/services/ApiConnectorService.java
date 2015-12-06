@@ -13,6 +13,9 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -69,13 +72,17 @@ public class ApiConnectorService extends IntentService {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
                 Headers responseHeaders = response.headers();
+                String testi = "";
                 for (int i = 0; i < responseHeaders.size(); i++) {
                     Log.e(TAG, responseHeaders.name(i) + ": " + responseHeaders.value(i));
                 }
-
+                testi = response.body().string();
+                Log.e(TAG, "Siis onko se oikeesti näiden välissä?");
                 Log.e(TAG, response.body().string());
+                ResponseBody body = response.body();
+                Log.e(TAG, "Testiksi: " + testi);
 
-                sendBroadCast(BroadcastConstants.BC_TEMP, response.body().string());
+                sendBroadCast(BroadcastConstants.BC_TEMP, testi);
             }
         });
     }
