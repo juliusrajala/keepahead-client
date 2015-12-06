@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:background="#000000"
             android:text="Where am I?"/>
-        <TextView
+        <com.example.kakatin.kakatinhelmet.models.BreadView
             android:layout_width="match_parent"
             android:textSize="30sp"
             android:textColor="#ffffff"
@@ -42,14 +42,14 @@
         android:layout_margin="16dp"
         android:orientation="vertical"
         android:gravity="center">
-        <TextView
+        <com.example.kakatin.kakatinhelmet.models.BreadView
             android:layout_width="match_parent"
             android:textSize="25sp"
             android:gravity="center"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
             android:text="Top speed:" />
-    <TextView
+    <com.example.kakatin.kakatinhelmet.models.BreadView
         android:layout_width="match_parent"
         android:textSize="30sp"
         android:textColor="#ffffff"
@@ -65,14 +65,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center">
-    <TextView
+    <com.example.kakatin.kakatinhelmet.models.BreadView
         android:layout_width="match_parent"
         android:textSize="25sp"
         android:textColor="#ffffff"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Temperature:" />
-        <TextView
+        <com.example.kakatin.kakatinhelmet.models.BreadView
             android:layout_width="match_parent"
             android:textColor="#ffffff"
             android:layout_height="wrap_content"
@@ -88,13 +88,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center">
-        <TextView
+        <com.example.kakatin.kakatinhelmet.models.FlameView
             android:layout_width="wrap_content"
             android:textSize="35sp"
             android:textColor="@color/TextWhite"
             android:layout_height="wrap_content"
             android:text="Last crash:" />
-        <TextView
+        <com.example.kakatin.kakatinhelmet.models.FlameView
             android:layout_width="wrap_content"
             android:textSize="45sp"
             android:textColor="@color/TextWhite"
