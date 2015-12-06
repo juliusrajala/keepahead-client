@@ -72,25 +72,31 @@ public class ApiConnectorService extends IntentService {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
                 Headers responseHeaders = response.headers();
-                String testi = "";
+                String bodyString = response.body().string();
                 for (int i = 0; i < responseHeaders.size(); i++) {
                     Log.e(TAG, responseHeaders.name(i) + ": " + responseHeaders.value(i));
                 }
-                testi = response.body().string();
                 Log.e(TAG, "Siis onko se oikeesti näiden välissä?");
                 Log.e(TAG, response.body().string());
-                ResponseBody body = response.body();
-                Log.e(TAG, "Testiksi: " + testi);
+                Log.e(TAG, "Body of response contains: " + bodyString);
 
-                sendBroadCast(BroadcastConstants.BC_TEMP, testi);
+                broadcastRecogniser(bodyString);
             }
         });
+    }
+    /** Takes the data caught from the response and determines type and data. */
+    private void broadcastRecogniser(String body){
+
     }
 
     //TODO: Make structure better for handling different kinds of broadcasts.
     private void sendBroadCast(String type, String data){
         Log.e(TAG, "Currently action is: " + type + " and data is " + data);
 
+        if(type.equals(BroadcastConstants.BC_TEMP)){
+            String[] temp = data.split(" ");
+            data = temp[temp.length-1];
+        }
         Intent localIntent =
                 new Intent(type)
                         .putExtra(BroadcastConstants.BC_TEMP_DATA, data);

@@ -42,6 +42,7 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
     private MapView mapView;
     private GoogleMap googleMap;
     GoogleApiClient mGoogleApiClient;
+    private boolean mActive;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -119,6 +120,7 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
     public void onPause(){
         super.onPause();
         mapView.onPause();
+        mActive = false;
     }
 
     private void fragmentTransaction(){
@@ -130,6 +132,7 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
     public void onResume(){
         super.onResume();
         mapView.onResume();
+        mActive = true;
     }
     public static OurMapFragment newInstance() {
         OurMapFragment fragment = new OurMapFragment();

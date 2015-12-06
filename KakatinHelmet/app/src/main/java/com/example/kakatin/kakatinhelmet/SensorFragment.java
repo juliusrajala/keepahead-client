@@ -37,9 +37,9 @@ public class SensorFragment extends Fragment {
     private int mTemp;
     private int mSpeed;
     private String mLocale;
+    private Boolean mActive;
 
-    private IntentFilter mStatusIntentFilter = new IntentFilter(BroadcastConstants.BC_TEMP);
-
+    private IntentFilter mDataIntentFilter = new IntentFilter(BroadcastConstants.BC_DATA_AVAILABLE);
 
     private CardView toolBar;
     private LinearLayout statsButton;
@@ -48,6 +48,7 @@ public class SensorFragment extends Fragment {
     private ImageView mapText;
     private View slider;
     private View goneSlider;
+
     private Handler handler;
 
     public static SensorFragment newInstance() {
@@ -119,12 +120,13 @@ public class SensorFragment extends Fragment {
     public void onResume(){
         super.onResume();
         ResponseReceiver mResponseReceiver = new ResponseReceiver();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mResponseReceiver, mStatusIntentFilter);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mResponseReceiver, mDataIntentFilter);
+        mActive = true;
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 callUpdate("http://damp-spire-9142.herokuapp.com/temperature");
-                Log.e(TAG,"Calling for data");
+                Log.e(TAG, "Calling for data");
                 handler.postDelayed(this, SYNC_DELAY);
             }
         }, SYNC_DELAY);
@@ -134,6 +136,7 @@ public class SensorFragment extends Fragment {
     public void onPause(){
         super.onPause();
         handler.removeCallbacksAndMessages(null);
+        mActive = false;
     }
 
     @Override
@@ -142,17 +145,15 @@ public class SensorFragment extends Fragment {
 
     }
 
-    private void updateViews(String type, String data){
+    private void updateViews(String type, final String data){
         if(data == null || getActivity() == null){
             return;
         }
-        Log.e(TAG, "data: "+data);
-
-        final String moldedData = data.substring(13,17);
+        Log.e(TAG, "data: " + data);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tempStat.setText(moldedData+"C");
+                tempStat.setText(data);
             }
         });
     }
@@ -173,8 +174,6 @@ public class SensorFragment extends Fragment {
         super.onDetach();
     }
 
-
-
     //TODO: check jumppatikku for smarter broadcastreceiver implementation
     private class ResponseReceiver extends BroadcastReceiver
     {
@@ -184,15 +183,17 @@ public class SensorFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
+            if(action == null){
+                return;
+            }
             Log.e(TAG, "Currently action is: " + action);
-
-            if(action.equals(BroadcastConstants.BC_TEMP)){
-                updateViews(action, intent.getStringExtra(BroadcastConstants.BC_TEMP_DATA));
+            if(action.equals(BroadcastConstants.BC_DATA_AVAILABLE)){
+                if(intent.getStringExtra(BroadcastConstants.BC_ALL) != null){
+                    Log.e(TAG, "Data is available. Update all views.");
+                }else if(intent.getStringExtra(BroadcastConstants.BC_IMPACT) != null){
+                    Log.e(TAG, "Impact received.");
+                }
             }
         }
-    }
-
-    private void defineIntentFilters(){
-        IntentFilter mStatusIntentFilter = new IntentFilter(BroadcastConstants.BC_TEMP);
     }
 }
