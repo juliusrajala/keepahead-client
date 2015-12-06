@@ -93,23 +93,21 @@ public class ApiConnectorService extends IntentService {
     private void broadcastRecogniser(String body) throws JSONException {
         Log.e(TAG, "BroadcastRecogniser called with String:" + body);
         JSONObject data = new JSONObject(body);
-        if(body.length() > 300){
-            JSONArray dataArray = new JSONArray(data.getJSONArray("data"));
-            for(int i = 0; i< dataArray.length();i++){
-                Log.e(TAG, "Sensordata parsed: " + dataArray.get(i));
-            }
+        if(body.length() > 200){
+            JSONArray dataArray = new JSONArray(data.getString("data"));
+//            for(int i = 0; i< dataArray.length();i++){
+//                Log.e(TAG, "Sensordata parsed: " + dataArray.get(i));
+//            }
+            Log.e(TAG, "dataArray contains: " + dataArray.toString());
+            sendBroadCast(BroadcastConstants.BC_ALL, dataArray.toString());
         }
     }
 
     //TODO: Make structure better for handling different kinds of broadcasts.
     private void sendBroadCast(String type, String data){
         Log.e(TAG, "Currently action is: " + type + " and data is " + data);
-        if(type.equals(BroadcastConstants.BC_TEMP)){
-            String[] temp = data.split(" ");
-            data = temp[temp.length-1];
-        }
         Intent localIntent =
-                new Intent(type)
+                new Intent(BroadcastConstants.BC_DATA_AVAILABLE)
                         .putExtra(type, data);
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
     }

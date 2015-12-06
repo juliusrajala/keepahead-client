@@ -25,6 +25,12 @@ import android.widget.Toast;
 import com.example.kakatin.kakatinhelmet.models.BroadcastConstants;
 import com.example.kakatin.kakatinhelmet.services.ApiConnectorService;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Date;
+
 
 public class SensorFragment extends Fragment {
     private static final String TAG = SensorFragment.class.getSimpleName();
@@ -33,6 +39,7 @@ public class SensorFragment extends Fragment {
     private TextView speedStat;
     private TextView tempStat;
     private TextView localeStat;
+    private TextView impactStat;
 
     private int mTemp;
     private int mSpeed;
@@ -72,6 +79,7 @@ public class SensorFragment extends Fragment {
         speedStat = (TextView)v.findViewById(R.id.speed_stat);
         tempStat = (TextView)v.findViewById(R.id.temp_stat);
         localeStat = (TextView)v.findViewById(R.id.locale_stat);
+        impactStat = (TextView)v.findViewById(R.id.last_crash_time);
 
         toolBar = (CardView)getActivity().findViewById(R.id.toolBar);
         statsButton = (LinearLayout)toolBar.findViewById(R.id.stats_button);
@@ -145,15 +153,14 @@ public class SensorFragment extends Fragment {
 
     }
 
-    private void updateViews(String type, final String data){
+    private void updateView(final TextView toChange, final String data){
         if(data == null || getActivity() == null){
             return;
         }
-        Log.e(TAG, "data: " + data);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tempStat.setText(data);
+                toChange.setText(data);
             }
         });
     }
@@ -166,12 +173,35 @@ public class SensorFragment extends Fragment {
 
     private void fragmentTransaction(){
         OurMapFragment fragment = OurMapFragment.newInstance();
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,fragment,"MAP_FRAGMENT").commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment, "MAP_FRAGMENT").commit();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    private void parseJSONForViews(String JSON){
+        JSONArray dataArray;
+        try {
+            dataArray = new JSONArray(JSON);
+            for(int i = 0; i< dataArray.length();i++){
+                Log.e(TAG, "Sensordata parsed: " + dataArray.get(i));
+                JSONObject jObject = new JSONObject(dataArray.get(i).toString());
+                String sId = jObject.getString("name");
+                if(sId.equals("TEMP_ID")){
+                    Double value = jObject.getDouble("value");
+                    updateView(tempStat, String.valueOf(value));
+                }else if(sId.equals("ACC_IMP_ID")){
+                    //TODO: Make impactContainer class for dealing with crashes.
+                    updateView(impactStat, jObject.getString("value"));
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Error handling JSON.");
+            return;
+        }
+
     }
 
     //TODO: check jumppatikku for smarter broadcastreceiver implementation
@@ -190,6 +220,7 @@ public class SensorFragment extends Fragment {
             if(action.equals(BroadcastConstants.BC_DATA_AVAILABLE)){
                 if(intent.getStringExtra(BroadcastConstants.BC_ALL) != null){
                     Log.e(TAG, "Data is available. Update all views.");
+                    parseJSONForViews(intent.getStringExtra(BroadcastConstants.BC_ALL));
                 }else if(intent.getStringExtra(BroadcastConstants.BC_IMPACT) != null){
                     Log.e(TAG, "Impact received.");
                 }
