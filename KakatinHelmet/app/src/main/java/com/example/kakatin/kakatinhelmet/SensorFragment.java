@@ -47,11 +47,11 @@ public class SensorFragment extends Fragment {
     private TextView impactStat;
 
     private int mTemp;
-    private int mSpeed;
+    private int mSpeed = 0;
     private String mLocale;
     private Boolean mActive;
-    private Double tsoLat;
-    private Double tsoLng;
+    private Double tsoLat = 60.459031;
+    private Double tsoLng = 22.267305;
 
     private IntentFilter mDataIntentFilter = new IntentFilter(BroadcastConstants.BC_DATA_AVAILABLE);
 
@@ -209,7 +209,7 @@ public class SensorFragment extends Fragment {
                     updateView(impactStat, jObject.getString("value"));
                 }else if(sId.equals("SPEED_ID")){
                     if(mSpeed < jObject.getInt("value")){
-                        mSpeed = jObject.getInt("value");
+                        mSpeed = (int) 3.6*jObject.getInt("value");
                     }
                     updateView(speedStat, String.valueOf(mSpeed+"km/h"));
                 }else if(sId.equals("LOC_LA_ID")){
@@ -229,7 +229,8 @@ public class SensorFragment extends Fragment {
         Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
         List<Address> addresses = gcd.getFromLocation(tsoLat, tsoLng, 1);
         if (addresses.size() == 0){ return; }
-        String city = (addresses.get(0).getLocality());
+        String city = (addresses.get(0).getSubAdminArea());
+        Log.e(TAG, "Content: "+addresses.get(0));
         String country = (addresses.get(0).getCountryName());
         updateView(localeStat, city+", "+country);
     }
