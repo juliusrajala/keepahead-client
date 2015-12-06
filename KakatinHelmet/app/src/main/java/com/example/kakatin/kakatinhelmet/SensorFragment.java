@@ -125,7 +125,7 @@ public class SensorFragment extends Fragment {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                callUpdate("http://damp-spire-9142.herokuapp.com/temperature");
+                callUpdate("http://damp-spire-9142.herokuapp.com/android/deliverAllData");
                 Log.e(TAG, "Calling for data");
                 handler.postDelayed(this, SYNC_DELAY);
             }

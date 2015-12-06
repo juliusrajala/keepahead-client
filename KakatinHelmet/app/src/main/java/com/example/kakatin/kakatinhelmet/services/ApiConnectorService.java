@@ -15,6 +15,8 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -76,30 +78,39 @@ public class ApiConnectorService extends IntentService {
                 for (int i = 0; i < responseHeaders.size(); i++) {
                     Log.e(TAG, responseHeaders.name(i) + ": " + responseHeaders.value(i));
                 }
-                Log.e(TAG, "Siis onko se oikeesti näiden välissä?");
-                Log.e(TAG, response.body().string());
+//                Log.e(TAG, response.body().string());
                 Log.e(TAG, "Body of response contains: " + bodyString);
 
-                broadcastRecogniser(bodyString);
+                try {
+                    broadcastRecogniser(bodyString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
     /** Takes the data caught from the response and determines type and data. */
-    private void broadcastRecogniser(String body){
-
+    private void broadcastRecogniser(String body) throws JSONException {
+        Log.e(TAG, "BroadcastRecogniser called with String:" + body);
+        JSONObject data = new JSONObject(body);
+        if(body.length() > 300){
+            JSONArray dataArray = new JSONArray(data.getJSONArray("data"));
+            for(int i = 0; i< dataArray.length();i++){
+                Log.e(TAG, "Sensordata parsed: " + dataArray.get(i));
+            }
+        }
     }
 
     //TODO: Make structure better for handling different kinds of broadcasts.
     private void sendBroadCast(String type, String data){
         Log.e(TAG, "Currently action is: " + type + " and data is " + data);
-
         if(type.equals(BroadcastConstants.BC_TEMP)){
             String[] temp = data.split(" ");
             data = temp[temp.length-1];
         }
         Intent localIntent =
                 new Intent(type)
-                        .putExtra(BroadcastConstants.BC_TEMP_DATA, data);
+                        .putExtra(type, data);
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
     }
 
