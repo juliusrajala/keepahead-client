@@ -185,7 +185,7 @@ public class SensorFragment extends Fragment {
 
     private void fragmentTransaction(){
         OurMapFragment fragment = OurMapFragment.newInstance();
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment, "MAP_FRAGMENT").commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment, "MAP_FRAGMENT").addToBackStack("SENSOR").commit();
     }
 
     public String timeCompare(long ts){
@@ -220,7 +220,7 @@ public class SensorFragment extends Fragment {
                     updateView(tempStat, String.valueOf(value)+"°C");
                 }else if(sId.equals("ACC_IMP_ID")){
                     //TODO: Make impactContainer class for dealing with crashes.
-                    updateView(impactStat, jObject.getString("value"));
+                    updateView(impactStat, timeCompare(jObject.getLong("ts")));
                 }else if(sId.equals("SPEED_ID")){
                     if(mSpeed < jObject.getInt("value")){
                         mSpeed = (int) 3.6*jObject.getInt("value");

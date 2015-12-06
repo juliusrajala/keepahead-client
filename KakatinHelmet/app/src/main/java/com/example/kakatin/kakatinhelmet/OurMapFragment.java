@@ -153,7 +153,7 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
 
     private void fragmentTransaction(){
         SensorFragment fragment = SensorFragment.newInstance();
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,fragment,"MAP_FRAGMENT").commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,fragment,"SENSOR").addToBackStack("MAP_FRAGMENT").commit();
     }
 
     @Override
