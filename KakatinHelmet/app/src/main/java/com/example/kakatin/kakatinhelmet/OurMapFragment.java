@@ -1,7 +1,14 @@
 package com.example.kakatin.kakatinhelmet;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kakatin.kakatinhelmet.models.BroadcastConstants;
+import com.example.kakatin.kakatinhelmet.services.ApiConnectorService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -24,12 +33,19 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 /**
  * Created by Matti on 04/12/2015.
  */
 public class OurMapFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
     public static final String TAG = OurMapFragment.class.getSimpleName();
+    private static final int SYNC_DELAY = 1000;
 
     private CardView toolBar;
     private LinearLayout statsButton;
@@ -39,9 +55,15 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
     private View slider;
     private View goneSlider;
 
+    GoogleApiClient mGoogleApiClient;
     private MapView mapView;
     private GoogleMap googleMap;
-    GoogleApiClient mGoogleApiClient;
+    private Handler handler;
+    private IntentFilter mDataIntentFilter = new IntentFilter(BroadcastConstants.BC_DATA_AVAILABLE);
+
+    private Double tsoLat = 60.459031;
+    private Double tsoLng = 22.267305;
+
     private boolean mActive;
 
     @Override
@@ -114,6 +136,7 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         buildGoogleApiClient();
+        handler = new Handler();
     }
 
     @Override
@@ -121,6 +144,8 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
         super.onPause();
         mapView.onPause();
         mActive = false;
+        handler.removeCallbacksAndMessages(null);
+
     }
 
     private void fragmentTransaction(){
@@ -132,8 +157,30 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
     public void onResume(){
         super.onResume();
         mapView.onResume();
+        ResponseReceiver mResponseReceiver = new ResponseReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mResponseReceiver, mDataIntentFilter);
         mActive = true;
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                callUpdate("http://damp-spire-9142.herokuapp.com/android/deliverLocation");
+                Log.e(TAG, "Calling for data");
+                updateMap();
+                handler.postDelayed(this, SYNC_DELAY);
+            }
+        }, SYNC_DELAY);
     }
+
+    private void updateMap(){
+        
+    }
+
+    public void callUpdate(String dataURI){
+        Intent intent = new Intent(getActivity(), ApiConnectorService.class);
+        intent.setData(Uri.parse(dataURI));
+        getActivity().startService(intent);
+    }
+
     public static OurMapFragment newInstance() {
         OurMapFragment fragment = new OurMapFragment();
         Bundle args = new Bundle();
@@ -169,5 +216,41 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
+    }
+
+    private void parseJSONForLocation(String JSON){
+        JSONObject data;
+        try {
+            data = new JSONObject(JSON);
+            tsoLat = data.getDouble("Lat");
+            tsoLng = data.getDouble("Long");
+        } catch (JSONException e) {
+            Log.e(TAG, "Error handling JSON.");
+            return;
+        }
+
+    }
+
+    private class ResponseReceiver extends BroadcastReceiver
+    {
+        private ResponseReceiver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if(action == null){
+                return;
+            }
+            Log.e(TAG, "Currently action is: " + action);
+            if(action.equals(BroadcastConstants.BC_DATA_AVAILABLE)){
+                if(intent.getStringExtra(BroadcastConstants.BC_LOCATION) != null){
+                    Log.e(TAG, "Data is available. Update all views.");
+                    parseJSONForLocation(intent.getStringExtra(BroadcastConstants.BC_LOCATION));
+                }else if(intent.getStringExtra(BroadcastConstants.BC_IMPACT) != null){
+                    Log.e(TAG, "Impact received.");
+                }
+            }
+        }
     }
 }
