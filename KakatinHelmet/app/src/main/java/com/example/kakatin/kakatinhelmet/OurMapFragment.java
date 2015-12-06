@@ -30,8 +30,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,8 +64,8 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
     private Handler handler;
     private IntentFilter mDataIntentFilter = new IntentFilter(BroadcastConstants.BC_DATA_AVAILABLE);
 
-    private Double tsoLat = 60.459031;
-    private Double tsoLng = 22.267305;
+    private Double tsoLat = 60.449974;
+    private Double tsoLng = 22.293218;
 
     private boolean mActive;
 
@@ -125,7 +128,7 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(60.449977, 22.293327), 15.0f));
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(60.449977, 22.293327))
+                .target(new LatLng(60.449974, 22.293327))
                 .zoom(15)
                 .build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -172,7 +175,11 @@ public class OurMapFragment extends Fragment implements GoogleApiClient.Connecti
     }
 
     private void updateMap(){
-        
+        googleMap.clear();
+        Marker thingseeOne = googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(tsoLat, tsoLng))
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.tso_marker)));
+        mapView.invalidate();
     }
 
     public void callUpdate(String dataURI){

@@ -93,7 +93,7 @@ public class ApiConnectorService extends IntentService {
     private void broadcastRecogniser(String body) throws JSONException {
         Log.e(TAG, "BroadcastRecogniser called with String:" + body);
         JSONObject data = new JSONObject(body);
-        if(data.getString("Lat") != null){
+        if(data.has("Lat")){
             sendBroadCast(BroadcastConstants.BC_LOCATION, data.toString());
         }
         if(body.length() > 200){
