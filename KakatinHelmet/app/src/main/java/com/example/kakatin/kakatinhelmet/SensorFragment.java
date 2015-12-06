@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,7 +31,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 
 public class SensorFragment extends Fragment {
@@ -45,6 +50,8 @@ public class SensorFragment extends Fragment {
     private int mSpeed;
     private String mLocale;
     private Boolean mActive;
+    private Double tsoLat;
+    private Double tsoLng;
 
     private IntentFilter mDataIntentFilter = new IntentFilter(BroadcastConstants.BC_DATA_AVAILABLE);
 
@@ -135,6 +142,11 @@ public class SensorFragment extends Fragment {
             public void run() {
                 callUpdate("http://damp-spire-9142.herokuapp.com/android/deliverAllData");
                 Log.e(TAG, "Calling for data");
+                try {
+                    updateLocation();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 handler.postDelayed(this, SYNC_DELAY);
             }
         }, SYNC_DELAY);
@@ -191,10 +203,19 @@ public class SensorFragment extends Fragment {
                 String sId = jObject.getString("name");
                 if(sId.equals("TEMP_ID")){
                     Double value = jObject.getDouble("value");
-                    updateView(tempStat, String.valueOf(value));
+                    updateView(tempStat, String.valueOf(value)+"°C");
                 }else if(sId.equals("ACC_IMP_ID")){
                     //TODO: Make impactContainer class for dealing with crashes.
                     updateView(impactStat, jObject.getString("value"));
+                }else if(sId.equals("SPEED_ID")){
+                    if(mSpeed < jObject.getInt("value")){
+                        mSpeed = jObject.getInt("value");
+                    }
+                    updateView(speedStat, String.valueOf(mSpeed+"km/h"));
+                }else if(sId.equals("LOC_LA_ID")){
+                    tsoLat = jObject.getDouble("value");
+                }else if(sId.equals("LOC_LO_ID")){
+                    tsoLng = jObject.getDouble("value");
                 }
             }
         } catch (JSONException e) {
@@ -202,6 +223,15 @@ public class SensorFragment extends Fragment {
             return;
         }
 
+    }
+
+    private void updateLocation() throws IOException {
+        Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
+        List<Address> addresses = gcd.getFromLocation(tsoLat, tsoLng, 1);
+        if (addresses.size() == 0){ return; }
+        String city = (addresses.get(0).getLocality());
+        String country = (addresses.get(0).getCountryName());
+        updateView(localeStat, city+", "+country);
     }
 
     //TODO: check jumppatikku for smarter broadcastreceiver implementation
