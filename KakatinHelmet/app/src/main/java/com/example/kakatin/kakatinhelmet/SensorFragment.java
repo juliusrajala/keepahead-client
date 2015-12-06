@@ -188,6 +188,20 @@ public class SensorFragment extends Fragment {
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment, "MAP_FRAGMENT").commit();
     }
 
+    public String timeCompare(long ts){
+        String result;
+        long dif;
+        java.util.Date date = new java.util.Date();
+        dif = date.getTime() - ts;
+        if (dif<60000){
+            result = "< 1 min";
+        }else{
+            result = (int)(dif/60000) + " min";
+        }
+        return result;
+    }
+
+
     @Override
     public void onDetach() {
         super.onDetach();
