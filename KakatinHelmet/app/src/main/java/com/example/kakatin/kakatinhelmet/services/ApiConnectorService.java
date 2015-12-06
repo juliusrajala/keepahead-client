@@ -2,8 +2,10 @@ package com.example.kakatin.kakatinhelmet.services;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.example.kakatin.kakatinhelmet.models.BroadcastConstants;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
@@ -24,6 +26,7 @@ public class ApiConnectorService extends IntentService {
 
     private final OkHttpClient client = new OkHttpClient();
 
+
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
@@ -31,6 +34,9 @@ public class ApiConnectorService extends IntentService {
      */
     public ApiConnectorService(String name) {
         super(name);
+    }
+    public ApiConnectorService(){
+        super("Fireeee");
     }
 
     @Override
@@ -59,6 +65,7 @@ public class ApiConnectorService extends IntentService {
 
             @Override
             public void onResponse(Response response) throws IOException {
+                Log.e(TAG, "Response caught.");
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
                 Headers responseHeaders = response.headers();
@@ -67,8 +74,20 @@ public class ApiConnectorService extends IntentService {
                 }
 
                 Log.e(TAG, response.body().string());
+
+                sendBroadCast(BroadcastConstants.BC_TEMP, response.body().string());
             }
         });
+    }
+
+    //TODO: Make structure better for handling different kinds of broadcasts.
+    private void sendBroadCast(String type, String data){
+        Log.e(TAG, "Currently action is: " + type + " and data is " + data);
+
+        Intent localIntent =
+                new Intent(type)
+                        .putExtra(BroadcastConstants.BC_TEMP_DATA, data);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
     }
 
     public void notifyServer() throws Exception {

@@ -1,22 +1,28 @@
 package com.example.kakatin.kakatinhelmet;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.DownloadListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kakatin.kakatinhelmet.models.BroadcastConstants;
 import com.example.kakatin.kakatinhelmet.services.ApiConnectorService;
 
 
@@ -31,6 +37,9 @@ public class SensorFragment extends Fragment {
     private int mTemp;
     private int mSpeed;
     private String mLocale;
+
+    private IntentFilter mStatusIntentFilter = new IntentFilter(BroadcastConstants.BC_TEMP);
+
 
     private CardView toolBar;
     private LinearLayout statsButton;
@@ -109,13 +118,22 @@ public class SensorFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
+        ResponseReceiver mResponseReceiver = new ResponseReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mResponseReceiver, mStatusIntentFilter);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 callUpdate("http://damp-spire-9142.herokuapp.com/temperature");
+                Log.e(TAG,"Calling for data");
                 handler.postDelayed(this, SYNC_DELAY);
             }
         }, SYNC_DELAY);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        handler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -124,9 +142,21 @@ public class SensorFragment extends Fragment {
 
     }
 
+    private void updateViews(String type, String data){
+        Log.e(TAG, "data: "+data);
+        final String moldedData = data.substring(13,16);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tempStat.setText(moldedData+"C");
+            }
+        });
+    }
+
     public void callUpdate(String dataURI){
         Intent intent = new Intent(getActivity(), ApiConnectorService.class);
         intent.setData(Uri.parse(dataURI));
+        getActivity().startService(intent);
     }
 
     private void fragmentTransaction(){
@@ -139,18 +169,26 @@ public class SensorFragment extends Fragment {
         super.onDetach();
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+
+
+    //TODO: check jumppatikku for smarter broadcastreceiver implementation
+    private class ResponseReceiver extends BroadcastReceiver
+    {
+        private ResponseReceiver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            Log.e(TAG, "Currently action is: " + action);
+
+            if(action.equals(BroadcastConstants.BC_TEMP)){
+                updateViews(action, intent.getStringExtra(BroadcastConstants.BC_TEMP_DATA));
+            }
+        }
+    }
+
+    private void defineIntentFilters(){
+        IntentFilter mStatusIntentFilter = new IntentFilter(BroadcastConstants.BC_TEMP);
     }
 }
