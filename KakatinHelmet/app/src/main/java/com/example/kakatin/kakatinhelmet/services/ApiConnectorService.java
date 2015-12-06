@@ -50,6 +50,16 @@ public class ApiConnectorService extends IntentService {
         if(dataString == null){
             return;
         }
+
+        Log.e(TAG, dataString);
+        if(dataString.equals("https://damp-spire-9142.herokuapp.com/android/notifyServer")){
+            try {
+                Log.e(TAG, "Sending notification to server");
+                notifyServer(dataString);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             getJSON(dataString);
         } catch (Exception e) {
@@ -115,18 +125,18 @@ public class ApiConnectorService extends IntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
     }
 
-    public void notifyServer() throws Exception {
-        String postBody = "";
+    public void notifyServer(String body) throws Exception {
+        String postBody = body;
 
         Request request = new Request.Builder()
-                .url("https://api.github.com/markdown/raw")
+                .url("https://damp-spire-9142.herokuapp.com/android/notifyServer")
                 .post(RequestBody.create(MEDIA_TYPE_JSON, postBody))
                 .build();
 
         Response response = client.newCall(request).execute();
         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-        System.out.println(response.body().string());
+        Log.e(TAG, response.body().string());
     }
 
 }

@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.example.kakatin.kakatinhelmet.MainActivity;
-import com.example.kakatin.kakatinhelmet.R;
 import com.google.android.gms.gcm.GcmListenerService;
 
 /**
